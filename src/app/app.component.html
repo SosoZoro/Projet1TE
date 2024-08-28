@@ -1,7 +1,8 @@
-<nav mat-tab-nav-bar aria-label="Main Navigation">
+<nav>
   <a mat-tab-link routerLink="/login" routerLinkActive="active">Connexion</a>
   <a mat-tab-link routerLink="/signup" routerLinkActive="active">Inscription</a>
-  <a mat-tab-link routerLink="/verbs" routerLinkActive="active">Verbes</a>
+  <a *ngIf="isLoggedIn()" mat-tab-link routerLink="/verbs" routerLinkActive="active">Verbes</a>
+  <button *ngIf="isLoggedIn()" mat-raised-button color="warn" (click)="logout()">Déconnexion</button>
 </nav>
 
 <router-outlet></router-outlet>
