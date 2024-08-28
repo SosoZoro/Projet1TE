@@ -1,0 +1,29 @@
+<mat-card>
+    <h2>Consulter un Verbe</h2>
+    <form [formGroup]="verbForm" (ngSubmit)="onSearchVerb()">
+      <mat-form-field appearance="fill">
+        <mat-label>Entrez un verbe</mat-label>
+        <input matInput formControlName="verb" placeholder="ex: habiter">
+        <mat-error *ngIf="verbForm.get('verb')?.invalid">Veuillez entrer un verbe valide</mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit" [disabled]="verbForm.invalid">Rechercher</button>
+    </form>
+  
+    <div *ngIf="conjugations">
+      <h3>Conjugaisons</h3>
+      <ul>
+        <li *ngFor="let conjugation of conjugations">{{ conjugation }}</li>
+      </ul>
+    </div>
+  
+    <h2>Favoris</h2>
+    <button mat-raised-button color="accent" (click)="getFavorites()">Voir mes favoris</button>
+    <ul *ngIf="favorites.length > 0">
+      <li *ngFor="let favorite of favorites">{{ favorite.verb }}
+        <button mat-icon-button color="warn" (click)="removeFavorite(favorite.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </li>
+    </ul>
+  </mat-card>
+  

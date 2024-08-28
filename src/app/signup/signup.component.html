@@ -1,0 +1,25 @@
+<mat-card>
+    <h2>Créer un Compte</h2>
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="fill">
+        <mat-label>Nom</mat-label>
+        <input matInput formControlName="name">
+        <mat-error *ngIf="signupForm.get('name')?.invalid">Nom requis</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+        <mat-error *ngIf="signupForm.get('email')?.invalid">Email invalide</mat-error>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Mot de passe</mat-label>
+        <input matInput type="password" formControlName="password">
+        <mat-error *ngIf="signupForm.get('password')?.invalid">Mot de passe requis</mat-error>
+      </mat-form-field>
+  
+      <button mat-raised-button color="primary" type="submit" [disabled]="signupForm.invalid">S'inscrire</button>
+    </form>
+  </mat-card>
+  
