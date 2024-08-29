@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = 'https://seal-app-v5cj7.ondigitalocean.app/v0/users';
+  private token: string | null = null; // Variable pour stocker le token en mémoire
 
   constructor(private http: HttpClient) {}
 
@@ -17,81 +18,55 @@ export class AuthService {
     return this.http.post(url, body);
   }
 
+  // Méthode pour la connexion
   login(email: string, password: string): Observable<any> {
     const url = `${this.apiUrl}/login`;
     const body = { email, password };
     return this.http.post(url, body).pipe(
       tap((response: any) => {
         if (response.token) {
-          this.saveToken(response.token);
-          console.log('Utilisateur connecté avec succès. Token stocké.');
+          this.token = response.token; // Stocke le token en mémoire
+          console.log('Utilisateur connecté avec succès. Token stocké en mémoire.');
         } else {
           console.warn('Échec de la connexion : Token non trouvé.');
         }
       })
     );
   }
-  
-
-  // Vérifie si localStorage est disponible
-  private isLocalStorageAvailable(): boolean {
-    try {
-      const test = '__localStorage_test__';
-      localStorage.setItem(test, test);
-      localStorage.removeItem(test);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  // Méthode pour stocker le token (dans le stockage local ou session)
-  saveToken(token: string): void {
-    if (this.isLocalStorageAvailable()) {
-      localStorage.setItem('authToken', token);
-    } else {
-      console.warn('localStorage is not available; token was not saved.');
-    }
-  }
 
   // Méthode pour récupérer le token
   getToken(): string | null {
-    if (this.isLocalStorageAvailable()) {
-      return localStorage.getItem('authToken');
+    if (this.token) {
+      console.log('Retrieved token from memory:', this.token);
     }
-    console.warn('localStorage is not available; no token retrieved.');
-    return null;
+    return this.token;
   }
 
   // Méthode pour supprimer le token lors de la déconnexion
   logout(): void {
-    if (this.isLocalStorageAvailable()) {
-      localStorage.removeItem('authToken');
-      console.log('Utilisateur déconnecté. Token supprimé.');
-    }
+    this.token = null; // Supprime le token de la mémoire
+    console.log('Utilisateur déconnecté. Token supprimé de la mémoire.');
   }
-  
 
+  // Vérifie si l'utilisateur est connecté
   isLoggedIn(): boolean {
-    const token = this.getToken();
-    if (!token) {
+    if (!this.token) {
       return false;
     }
-  
-    // Ajoutez une vérification supplémentaire du token si possible
-    // Exemple : vérification basique du format du token
-    const payload = token.split('.')[1];
+
+    // Vérification de l'expiration du token
+    const payload = this.token.split('.')[1];
     if (!payload) {
       return false;
     }
-  
-    // Décodage du payload pour vérifier l'expiration
-    const decoded = JSON.parse(atob(payload));
-    const isExpired = decoded.exp < Date.now() / 1000; // Vérifie si le token est expiré
-  
-    return !isExpired;
-  }
-  
-  
 
+    try {
+      const decoded = JSON.parse(atob(payload));
+      const isExpired = decoded.exp < Date.now() / 1000; // Vérifie si le token est expiré
+      return !isExpired;
+    } catch (error) {
+      console.error('Erreur lors du décodage du token:', error);
+      return false;
+    }
+  }
 }

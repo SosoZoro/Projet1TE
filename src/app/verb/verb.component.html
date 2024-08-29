@@ -1,29 +1,46 @@
-<mat-card>
-    <h2>Consulter un Verbe</h2>
-    <form [formGroup]="verbForm" (ngSubmit)="onSearchVerb()">
-      <mat-form-field appearance="fill">
-        <mat-label>Entrez un verbe</mat-label>
-        <input matInput formControlName="verb" placeholder="ex: habiter">
-        <mat-error *ngIf="verbForm.get('verb')?.invalid">Veuillez entrer un verbe valide</mat-error>
-      </mat-form-field>
-      <button mat-raised-button color="primary" type="submit" [disabled]="verbForm.invalid">Rechercher</button>
-    </form>
-  
-    <div *ngIf="conjugations">
-      <h3>Conjugaisons</h3>
+<div class="verb-container">
+  <form [formGroup]="verbForm" (ngSubmit)="onSearchVerb()">
+    <mat-form-field appearance="fill">
+      <mat-label>Verbe</mat-label>
+      <input matInput formControlName="verb" placeholder="Entrez un verbe">
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit">Rechercher</button>
+  </form>
+
+  <!-- Affichage des erreurs -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Affichage des conjugaisons si elles sont disponibles -->
+  <div *ngIf="conjugations">
+    <h2>Conjugaisons de {{ conjugations.word }}</h2>
+    <p>{{ conjugations.fullDescription }}</p>
+
+    <!-- Exemple d'affichage de conjugaison à l'indicatif présent -->
+    <div *ngIf="conjugations.indicatif?.present">
+      <h3>Indicatif Présent</h3>
       <ul>
-        <li *ngFor="let conjugation of conjugations">{{ conjugation }}</li>
+        <li *ngFor="let entry of objectEntries(conjugations.indicatif.present)">
+          {{ entry[0] }}: {{ entry[1] }}
+        </li>
       </ul>
     </div>
-  
-    <h2>Favoris</h2>
-    <button mat-raised-button color="accent" (click)="getFavorites()">Voir mes favoris</button>
-    <ul *ngIf="favorites.length > 0">
-      <li *ngFor="let favorite of favorites">{{ favorite.verb }}
-        <button mat-icon-button color="warn" (click)="removeFavorite(favorite.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </li>
-    </ul>
-  </mat-card>
-  
+
+    <!-- Bouton pour ajouter le verbe en favoris -->
+    <button mat-raised-button color="accent" (click)="addToFavorites()">Ajouter aux favoris</button>
+  </div>
+
+  <!-- Bouton pour voir les favoris -->
+  <button mat-raised-button color="accent" (click)="getFavorites()">Voir mes favoris</button>
+
+  <!-- Affichage des favoris -->
+  <ul *ngIf="favorites.length > 0">
+    <li *ngFor="let favorite of favorites">
+      {{ favorite.verb }}
+      <button mat-icon-button color="warn" (click)="removeFavorite(favorite.id)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </li>
+  </ul>
+</div>
