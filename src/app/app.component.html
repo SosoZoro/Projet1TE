@@ -1,8 +1,16 @@
 <nav>
-  <a mat-tab-link routerLink="/login" routerLinkActive="active">Connexion</a>
-  <a mat-tab-link routerLink="/signup" routerLinkActive="active">Inscription</a>
-  <a *ngIf="isLoggedIn()" mat-tab-link routerLink="/verbs" routerLinkActive="active">Verbes</a>
-  <button *ngIf="isLoggedIn()" mat-raised-button color="warn" (click)="logout()">Déconnexion</button>
+  <button mat-raised-button color="primary" routerLink="/login" routerLinkActive="active">
+    Connexion
+  </button>
+  <button mat-raised-button color="accent" routerLink="/signup" routerLinkActive="active">
+    Inscription
+  </button>
+  <button *ngIf="isLoggedIn()" mat-raised-button color="primary" routerLink="/verbs" routerLinkActive="active">
+    Verbes
+  </button>
+  <button *ngIf="isLoggedIn()" mat-raised-button color="warn" (click)="logout()">
+    Déconnexion
+  </button>
 </nav>
 
 <router-outlet></router-outlet>

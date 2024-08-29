@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap, throwError } from 'rxjs';
-import { AuthService } from './auth.service'; // Importe AuthService pour utiliser le token
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,30 +30,6 @@ export class VerbService {
       tap({
         next: (response) => console.log('Get Verb API Response:', response),
         error: (error) => console.error('Error fetching verb:', error)
-      })
-    );
-  }
-
-  // Méthode pour obtenir des verbes aléatoires
-  getRandomVerbs(quantity: number): Observable<any> {
-    const url = `${this.apiUrl}/random`;
-    const token = this.authService.getToken();
-    console.log('Token used in request for random verbs:', token);
-
-    if (!token) {
-      console.error('No token available for request.');
-      return throwError('Token is missing');
-    }
-
-    const headers = new HttpHeaders({
-      'x-access-token': token
-    });
-
-    const body = { quantity };
-    return this.http.post(url, body, { headers }).pipe(
-      tap({
-        next: (response) => console.log('Get Random Verbs API Response:', response),
-        error: (error) => console.error('Error fetching random verbs:', error)
       })
     );
   }

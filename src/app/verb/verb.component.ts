@@ -12,7 +12,6 @@ export class VerbComponent {
   conjugations: any = null; // Contient les données de conjugaison du verbe recherché
   favorites: any[] = []; // Contient les favoris
   errorMessage: string = ''; // Pour afficher un message d'erreur si nécessaire
-  selectedVerb: string = ''; // Pour stocker le verbe actuel affiché
 
   constructor(private fb: FormBuilder, private verbService: VerbService) {
     this.verbForm = this.fb.group({
@@ -24,7 +23,6 @@ export class VerbComponent {
     const { verb } = this.verbForm.value;
     this.errorMessage = '';
     this.conjugations = null;
-    this.selectedVerb = verb; // Enregistre le verbe recherché
 
     this.verbService.getVerb(verb).subscribe({
       next: (response) => {
@@ -43,29 +41,13 @@ export class VerbComponent {
     });
   }
 
-  // Méthode pour ajouter le verbe en favoris
-  addToFavorites() {
-    if (this.selectedVerb) {
-      this.verbService.addFavorite(this.selectedVerb).subscribe({
-        next: () => {
-          console.log('Verbe ajouté aux favoris avec succès !');
-        },
-        error: (error) => {
-          this.errorMessage = 'Erreur lors de l\'ajout du verbe aux favoris.';
-          console.error('Erreur lors de l\'ajout du verbe aux favoris', error);
-        }
-      });
-    } else {
-      console.warn('Aucun verbe sélectionné pour ajouter aux favoris.');
-    }
-  }
-
   // Méthode pour récupérer les favoris
   getFavorites() {
     this.verbService.getAllFavorites().subscribe({
       next: (response) => {
         console.log('Favoris récupérés:', response);
-        this.favorites = response || [];
+        // Assuming the response structure based on your console log
+        this.favorites = response.verbs || []; // Assign the correct array from the response
       },
       error: (error) => {
         this.errorMessage = 'Erreur lors de la récupération des favoris.';

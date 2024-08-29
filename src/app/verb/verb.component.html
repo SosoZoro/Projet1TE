@@ -26,9 +26,6 @@
         </li>
       </ul>
     </div>
-
-    <!-- Bouton pour ajouter le verbe en favoris -->
-    <button mat-raised-button color="accent" (click)="addToFavorites()">Ajouter aux favoris</button>
   </div>
 
   <!-- Bouton pour voir les favoris -->
@@ -38,9 +35,11 @@
   <ul *ngIf="favorites.length > 0">
     <li *ngFor="let favorite of favorites">
       {{ favorite.verb }}
-      <button mat-icon-button color="warn" (click)="removeFavorite(favorite.id)">
+      <button mat-icon-button color="warn" (click)="removeFavorite(favorite.uid)">
         <mat-icon>delete</mat-icon>
       </button>
     </li>
   </ul>
+
+  
 </div>
