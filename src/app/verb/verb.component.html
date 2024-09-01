@@ -1,37 +1,40 @@
 <div class="verb-container">
   <form [formGroup]="verbForm" (ngSubmit)="onSearchVerb()">
     <mat-form-field appearance="fill">
-      <mat-label>Verbe</mat-label>
-      <input matInput formControlName="verb" placeholder="Entrez un verbe">
+      <mat-label>Verb</mat-label>
+      <input matInput formControlName="verb" placeholder="Enter a verb">
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit">Rechercher</button>
+    <button mat-raised-button color="primary" type="submit">Search</button>
   </form>
 
-  <!-- Affichage des erreurs -->
+  <!-- Display errors -->
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
   </div>
 
-  <!-- Affichage des conjugaisons si elles sont disponibles -->
+  <!-- Display conjugations if available -->
   <div *ngIf="conjugations">
-    <h2>Conjugaisons de {{ conjugations.word }}</h2>
+    <h2>Conjugations of {{ conjugations.word }}</h2>
     <p>{{ conjugations.fullDescription }}</p>
 
-    <!-- Exemple d'affichage de conjugaison à l'indicatif présent -->
+    <!-- Example display of present indicative conjugation -->
     <div *ngIf="conjugations.indicatif?.present">
-      <h3>Indicatif Présent</h3>
+      <h3>Indicative Present</h3>
       <ul>
         <li *ngFor="let entry of objectEntries(conjugations.indicatif.present)">
           {{ entry[0] }}: {{ entry[1] }}
         </li>
       </ul>
     </div>
+
+    <!-- Button to add the displayed verb to favorites -->
+    <button mat-raised-button color="accent" (click)="addToFavorites()">Add to Favorites</button>
   </div>
 
-  <!-- Bouton pour voir les favoris -->
-  <button mat-raised-button color="accent" (click)="getFavorites()">Voir mes favoris</button>
+  <!-- Button to view favorites -->
+  <button mat-raised-button color="accent" (click)="getFavorites()">View my favorites</button>
 
-  <!-- Affichage des favoris -->
+  <!-- Display favorites -->
   <ul *ngIf="favorites.length > 0">
     <li *ngFor="let favorite of favorites">
       {{ favorite.verb }}
@@ -40,6 +43,4 @@
       </button>
     </li>
   </ul>
-
-  
 </div>
