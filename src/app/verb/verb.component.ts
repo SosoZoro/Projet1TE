@@ -9,10 +9,10 @@ import { VerbService } from '../verb.service';
 })
 export class VerbComponent {
   verbForm: FormGroup;
-  conjugations: any = null; // Stores the conjugation data of the searched verb
-  favorites: any[] = []; // Stores favorite verbs
-  errorMessage: string = ''; // For displaying error messages, if needed
-  selectedVerb: string = ''; // The verb currently displayed
+  conjugations: any = null; // Contient les données de conjugaison du verbe recherché
+  favorites: any[] = []; // Contient les favoris
+  errorMessage: string = ''; // Pour afficher un message d'erreur si nécessaire
+  selectedVerb: string = ''; // Le verbe actuellement affiché
 
   constructor(private fb: FormBuilder, private verbService: VerbService) {
     this.verbForm = this.fb.group({
@@ -24,7 +24,7 @@ export class VerbComponent {
     const { verb } = this.verbForm.value;
     this.errorMessage = '';
     this.conjugations = null;
-    this.selectedVerb = verb; // Store the searched verb
+    this.selectedVerb = verb; // Stocke le verbe recherché
 
     this.verbService.getVerb(verb).subscribe({
       next: (response) => {
@@ -32,65 +32,65 @@ export class VerbComponent {
         if (response.verb) {
           this.conjugations = response.verb;
         } else {
-          this.errorMessage = 'No conjugation data found.';
+          this.errorMessage = 'Aucune donnée de conjugaison trouvée.';
           console.warn('No verb data found in response.');
         }
       },
       error: (error) => {
-        this.errorMessage = 'Error fetching verb.';
-        console.error('Error fetching verb', error);
+        this.errorMessage = 'Erreur lors de la récupération du verbe.';
+        console.error('Erreur lors de la récupération du verbe', error);
       }
     });
   }
 
-  // Method to add the displayed verb to favorites
+  // Méthode pour ajouter le verbe affiché aux favoris
   addToFavorites() {
     if (!this.selectedVerb) {
-      this.errorMessage = 'No verb selected to add to favorites.';
+      this.errorMessage = 'Aucun verbe sélectionné à ajouter aux favoris.';
       return;
     }
 
     this.verbService.addFavorite(this.selectedVerb).subscribe({
       next: (response) => {
-        console.log('Verb added to favorites:', response);
-        this.getFavorites(); // Refresh the favorites list
+        console.log('Verbe ajouté aux favoris:', response);
+        this.getFavorites(); // Rafraîchit la liste des favoris
       },
       error: (error) => {
-        this.errorMessage = 'Error adding verb to favorites.';
-        console.error('Error adding verb to favorites', error);
+        this.errorMessage = 'Erreur lors de l\'ajout du verbe aux favoris.';
+        console.error('Erreur lors de l\'ajout du verbe aux favoris', error);
       }
     });
   }
 
-  // Method to fetch favorites
+  // Méthode pour récupérer les favoris
   getFavorites() {
     this.verbService.getAllFavorites().subscribe({
       next: (response) => {
-        console.log('Favorites retrieved:', response);
-        this.favorites = response.verbs || []; // Adjust to match the response structure
+        console.log('Favoris récupérés:', response);
+        this.favorites = response.verbs || []; // Ajuste pour correspondre à la structure de la réponse
       },
       error: (error) => {
-        this.errorMessage = 'Error fetching favorites.';
-        console.error('Error fetching favorites', error);
+        this.errorMessage = 'Erreur lors de la récupération des favoris.';
+        console.error('Erreur lors de la récupération des favoris', error);
       }
     });
   }
 
-  // Method to remove a favorite
+  // Méthode pour supprimer un favori
   removeFavorite(id: string) {
     this.verbService.deleteFavorite(id).subscribe({
       next: () => {
-        console.log('Favorite removed.');
-        this.getFavorites(); // Refresh the favorites after deletion
+        console.log('Favori supprimé.');
+        this.getFavorites(); // Recharge les favoris après suppression
       },
       error: (error) => {
-        this.errorMessage = 'Error removing favorite.';
-        console.error('Error removing favorite', error);
+        this.errorMessage = 'Erreur lors de la suppression du favori.';
+        console.error('Erreur lors de la suppression du favori', error);
       }
     });
   }
 
-  // Utility method to iterate over objects in the HTML template
+  // Méthode utilitaire pour itérer sur les objets dans le template HTML
   objectEntries(obj: any): [string, any][] {
     return Object.entries(obj);
   }
