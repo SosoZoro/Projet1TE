@@ -12,38 +12,52 @@
     {{ errorMessage }}
   </div>
 
-  <!-- Affichage des conjugaisons si elles sont disponibles -->
+  <!-- Affichage des conjugaisons si disponibles -->
   <div *ngIf="conjugations">
     <h2>Conjugaisons de {{ conjugations.word }}</h2>
     <p>{{ conjugations.fullDescription }}</p>
 
-    <!-- Exemple d'affichage de conjugaison à l'indicatif présent -->
-    <div *ngIf="conjugations.indicatif?.present">
-      <h3>Indicatif Présent</h3>
+    <!-- Sélection du temps verbal -->
+    <mat-form-field appearance="fill">
+      <mat-label>Temps Verbal</mat-label>
+      <mat-select [(value)]="selectedTense">
+        <mat-option *ngFor="let tense of tenses" [value]="tense">{{ tense }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Affichage de la conjugaison pour le temps sélectionné -->
+    <div *ngIf="selectedTense && conjugations[selectedTense]">
+      <h3>{{ selectedTense }}</h3>
       <ul>
-        <li *ngFor="let entry of objectEntries(conjugations.indicatif.present)">
-          {{ entry[0] }}: {{ entry[1] }}
-        </li>
+        <!-- Itérer sur les clés de conjugaison pour afficher les formes -->
+        <ng-container *ngFor="let entry of objectEntries(conjugations[selectedTense])">
+          <li *ngIf="isObject(entry[1])">{{ entry[0] }}:
+            <ul>
+              <!-- Afficher les sous-éléments s'ils existent -->
+              <li *ngFor="let subEntry of objectEntries(entry[1])">
+                {{ subEntry[0] }}: {{ subEntry[1] }}
+              </li>
+            </ul>
+          </li>
+          <li *ngIf="!isObject(entry[1])">{{ entry[0] }}: {{ entry[1] }}</li>
+        </ng-container>
       </ul>
     </div>
-
-    <!-- Bouton pour ajouter le verbe affiché aux favoris -->
-    <button mat-raised-button color="accent" (click)="addToFavorites()">Ajouter aux favoris</button>
   </div>
+
+  <!-- Bouton pour ajouter le verbe affiché aux favoris -->
+  <button mat-raised-button color="accent" (click)="addToFavorites()">Ajouter aux Favoris</button>
 
   <!-- Bouton pour voir les favoris -->
   <button mat-raised-button color="accent" (click)="getFavorites()">Voir mes favoris</button>
 
   <!-- Affichage des favoris -->
-  <div *ngIf="favorites.length > 0">
-    <h3>Mes Favoris</h3>
-    <ul>
-      <li *ngFor="let favorite of favorites">
-        {{ favorite.verb }}
-        <button mat-icon-button color="warn" (click)="removeFavorite(favorite.uid)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </li>
-    </ul>
-  </div>
+  <ul *ngIf="favorites.length > 0">
+    <li *ngFor="let favorite of favorites">
+      {{ favorite.verb }}
+      <button mat-icon-button color="warn" (click)="removeFavorite(favorite.uid)">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </li>
+  </ul>
 </div>
