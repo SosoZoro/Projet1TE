@@ -1,10 +1,35 @@
+/* Set a black background for the entire app */
+:host {
+  display: block;
+  background-color: #000; /* Black background */
+  color: #fff; /* White text color */
+  min-height: 100vh; /* Ensure it covers the full viewport height */
+  padding: 20px; /* Add some padding around the content */
+  box-sizing: border-box;
+}
+
 .logo-container {
-    text-align: left;
-    margin: 20px 0; /* Adjust the margin as needed */
-  }
-  
-  .logo-image {
-    max-width: 200px; /* Adjust the size as needed */
-    height: auto;
-  }
-  
+  text-align: left;
+  margin: 20px 0;
+}
+
+.logo-image {
+  max-width: 200px;
+  height: auto;
+}
+
+/* Additional styling for the navigation buttons */
+nav button {
+  margin-right: 10px;
+  margin-bottom: 20px; 
+}
+
+nav button.mat-raised-button {
+  background-color: #b71c1c; /* Red color for buttons */
+  color: white;
+}
+
+nav button.mat-raised-button:hover {
+  background-color: #d32f2f; /* Darker red for hover state */
+}
+
